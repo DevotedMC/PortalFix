@@ -98,11 +98,15 @@ public class PortalFix extends JavaPlugin implements Listener {
 	class TeleportIfStill extends BukkitRunnable implements Listener {
 		private UUID p;
 		private Location l;
+		private Countdown countdown;
 		
 		public TeleportIfStill(UUID p, Location l) {
 			this.p = p;
 			this.l = l;
 			getServer().getPluginManager().registerEvents(this, PortalFix.getPlugin());
+			countdown = new Countdown((Config.getWaitTime() - Config.getCountdownInterval()) * 20, 
+					Config.getCountdownInterval() * 20, getPlugin().getServer().getPlayer(p));
+			countdown.runTaskLater(PortalFix.getPlugin(), Config.getCountdownInterval() * 20);
 		}
 		
 		@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled=true)
@@ -125,6 +129,7 @@ public class PortalFix extends JavaPlugin implements Listener {
 		private void doCancel(boolean unset) {
 			if (unset) {
 				this.cancel();
+				countdown.killSelfAndChildren();
 			}
 			HandlerList.unregisterAll(this);
 		}
@@ -150,7 +155,7 @@ public class PortalFix extends JavaPlugin implements Listener {
 						public void run() {
 							Player qp = Bukkit.getPlayer(this.ap);
 							if (qp == null) return; // else, they logged off.
-							qp.sendMessage(ChatColor.RED + Config.getPostMessage());
+							qp.sendMessage(doColors(Config.getPostMessage()));
 						}
 					}.runTaskLater(PortalFix.getPlugin(), 10); // wait half a second then send message.
 				}
@@ -158,6 +163,40 @@ public class PortalFix extends JavaPlugin implements Listener {
 				PortalFix.severe("Tried to recheck if a player was stuck but an exception occurred", e);
 			}
 		}
+	}
+	
+	class Countdown extends BukkitRunnable {
+		int timeLeft, timeBetweenMessages;
+		Player p;
+		Countdown child = null;
+		
+		//timeLeft and timeBetweenMessages should be in seconds
+		public Countdown(int timeLeft, int timeBetweenMessages, Player p) {
+			this.timeLeft = timeLeft;
+			this.timeBetweenMessages = timeBetweenMessages;
+			this.p = p;
+		}
+		
+		public void run() {
+			p.sendMessage(doColors(Config.getCountdownMessage().replace("%0", String.valueOf(timeLeft / 20))));
+			if(timeLeft - timeBetweenMessages > 0) {
+				child = new Countdown(timeLeft - timeBetweenMessages, timeBetweenMessages, p);
+				child.runTaskLater(PortalFix.getPlugin(), timeBetweenMessages);
+			}
+		}
+		
+		//Devoted is not responsible for the possible results of taking life advice from method names
+		public void killSelfAndChildren() {
+			if(child == null) {
+				this.cancel();
+			}else {
+				child.killSelfAndChildren();
+			}
+		}
+	}
+	
+	public static String doColors(String s) {
+		return s.replace('&', ChatColor.COLOR_CHAR);
 	}
 	
 	private static void log(String message, Object...replace) {

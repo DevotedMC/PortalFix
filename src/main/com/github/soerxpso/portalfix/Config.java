@@ -25,6 +25,14 @@ public class Config {
 			return 120;
 		}
 	}
+	
+	public static int getCountdownInterval() {
+		try {
+			return config.getInt("countdown_interval", 5);
+		}catch(NullPointerException e) {
+			return 5;
+		}
+	}
 
 	public static int getRecheckTime() {
 		try {
@@ -36,9 +44,18 @@ public class Config {
 	
 	public static String getMessage() {
 		try {
-			return config.getString("teleport_message", "If you are stuck, please stand still and wait to be teleported.");
+			return PortalFix.doColors(
+					config.getString("teleport_message", "&c&lIf you are stuck, please stand still and wait to be teleported.&r"));
 		}catch(NullPointerException e) {
-			return "If you are stuck, please stand still and wait to be teleported.";
+			return PortalFix.doColors("&c&lIf you are stuck, please stand still and wait to be teleported.&r");
+		}
+	}
+	
+	public static String getCountdownMessage() {
+		try {
+			return config.getString("countdown_message", "&4&lWait %0 more seconds to be teleported.&r");
+		}catch(NullPointerException e) {
+			return "&4&lWait %0 more seconds to be teleported.&r";
 		}
 	}
 
