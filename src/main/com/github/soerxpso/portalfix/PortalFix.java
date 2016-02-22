@@ -81,13 +81,12 @@ public class PortalFix extends JavaPlugin implements Listener {
 				if (ql == null) return;
 				Block qb = ql.getBlock();
 				if (qb == null) return;
-				if (Material.PORTAL == qb.getType() && l.getWorld().equals(ql.getWorld()) &&
-					l.distanceSquared(ql) <= 16.1d) {
+				if (Material.PORTAL == qb.getType()) {
 					log("Looks like {0} is stuck in a portal at {1}, checking again in {2} seconds.",
 						qp.getDisplayName(), ql, Config.getWaitTime());
 					// They are still in the portal.
-					qp.sendMessage(ChatColor.RED + Config.getMessage());
-					new TeleportIfStill(p, l).runTaskLater(plugin, Config.getWaitTime() * 20);
+					qp.sendMessage(doColors(Config.getMessage()));
+					new TeleportIfStill(p, ql).runTaskLater(plugin, Config.getWaitTime() * 20);
 				}
 			} catch(Exception e) { // waffling a bit here
 				PortalFix.severe("Was tracking a player but an exception occurred", e);
