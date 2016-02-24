@@ -1,4 +1,5 @@
 package com.github.soerxpso.portalfix;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class Config {
@@ -44,26 +45,31 @@ public class Config {
 	
 	public static String getMessage() {
 		try {
-			return PortalFix.doColors(
+			return ChatColor.translateAlternateColorCodes('&', 
 					config.getString("teleport_message", "&c&lIf you are stuck, please stand still and wait to be teleported.&r"));
 		}catch(NullPointerException e) {
-			return PortalFix.doColors("&c&lIf you are stuck, please stand still and wait to be teleported.&r");
+			return ChatColor.translateAlternateColorCodes('&', 
+					"&c&lIf you are stuck, please stand still and wait to be teleported.&r");
 		}
 	}
 	
 	public static String getCountdownMessage() {
 		try {
-			return config.getString("countdown_message", "&4&lWait %0 more seconds to be teleported.&r");
+			return ChatColor.translateAlternateColorCodes('&', 
+					config.getString("countdown_message", "&4&lWait %0 more seconds to be teleported.&r"));
 		}catch(NullPointerException e) {
-			return "&4&lWait %0 more seconds to be teleported.&r";
+			return ChatColor.translateAlternateColorCodes('&', 
+					"&4&lWait %0 more seconds to be teleported.&r");
 		}
 	}
 
 	public static String getPostMessage() {
 		try {
-			return config.getString("post_teleport_message", "You've been sent back to spawn because you appeared to be stuck in a portal.");
+			return ChatColor.translateAlternateColorCodes('&', 
+					config.getString("post_teleport_message", "You've been sent back to spawn because you appeared to be stuck in a portal."));
 		} catch(NullPointerException e) {
-			return "You've been sent back to spawn because you appeared to be stuck in a portal.";
+			return ChatColor.translateAlternateColorCodes('&', 
+					"You've been sent back to spawn because you appeared to be stuck in a portal.");
 		}
 	}
 }
