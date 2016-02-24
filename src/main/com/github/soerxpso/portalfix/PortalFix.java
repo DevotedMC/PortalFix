@@ -65,12 +65,10 @@ public class PortalFix extends JavaPlugin implements Listener {
 	}
 	
 	class CheckIfStuck extends BukkitRunnable {
-		private Location l;
 		private UUID p;
 
 		public CheckIfStuck(Player p) {
 			this.p = p.getUniqueId();
-			this.l = p.getEyeLocation();
 		}
 
 		public void run() {
@@ -81,13 +79,12 @@ public class PortalFix extends JavaPlugin implements Listener {
 				if (ql == null) return;
 				Block qb = ql.getBlock();
 				if (qb == null) return;
-				if (Material.PORTAL == qb.getType() && l.getWorld().equals(ql.getWorld()) &&
-					l.distanceSquared(ql) <= 16.1d) {
+				if (Material.PORTAL == qb.getType()) {
 					log("Looks like {0} is stuck in a portal at {1}, checking again in {2} seconds.",
 						qp.getDisplayName(), ql, Config.getWaitTime());
 					// They are still in the portal.
-					qp.sendMessage(ChatColor.RED + Config.getMessage());
-					new TeleportIfStill(p, l).runTaskLater(plugin, Config.getWaitTime() * 20);
+					qp.sendMessage(Config.getMessage());
+					new TeleportIfStill(p, ql).runTaskLater(plugin, Config.getWaitTime() * 20);
 				}
 			} catch(Exception e) { // waffling a bit here
 				PortalFix.severe("Was tracking a player but an exception occurred", e);
@@ -98,11 +95,16 @@ public class PortalFix extends JavaPlugin implements Listener {
 	class TeleportIfStill extends BukkitRunnable implements Listener {
 		private UUID p;
 		private Location l;
+		private Countdown countdown;
 		
 		public TeleportIfStill(UUID p, Location l) {
 			this.p = p;
 			this.l = l;
 			getServer().getPluginManager().registerEvents(this, PortalFix.getPlugin());
+			int interval = Config.getCountdownInterval() * 20;
+			int waitTime = Config.getWaitTime() * 20;
+			countdown = new Countdown(waitTime - interval, interval, getPlugin().getServer().getPlayer(p));
+			countdown.runTaskTimer(PortalFix.getPlugin(), interval, interval);
 		}
 		
 		@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled=true)
@@ -125,6 +127,7 @@ public class PortalFix extends JavaPlugin implements Listener {
 		private void doCancel(boolean unset) {
 			if (unset) {
 				this.cancel();
+				countdown.cancel();
 			}
 			HandlerList.unregisterAll(this);
 		}
@@ -150,12 +153,31 @@ public class PortalFix extends JavaPlugin implements Listener {
 						public void run() {
 							Player qp = Bukkit.getPlayer(this.ap);
 							if (qp == null) return; // else, they logged off.
-							qp.sendMessage(ChatColor.RED + Config.getPostMessage());
+							qp.sendMessage(Config.getPostMessage());
 						}
 					}.runTaskLater(PortalFix.getPlugin(), 10); // wait half a second then send message.
 				}
 			} catch(Exception e) { // waffling a bit here
 				PortalFix.severe("Tried to recheck if a player was stuck but an exception occurred", e);
+			}
+		}
+	}
+	
+	class Countdown extends BukkitRunnable {
+		int timeLeft, timeBetweenMessages;
+		Player p;
+		
+		//timeLeft and timeBetweenMessages should be in seconds
+		public Countdown(int timeLeft, int timeBetweenMessages, Player p) {
+			this.timeLeft = timeLeft;
+			this.timeBetweenMessages = timeBetweenMessages;
+			this.p = p;
+		}
+		
+		public void run() {
+			p.sendMessage(Config.getCountdownMessage().replace("%0", String.valueOf(timeLeft / 20)));
+			if(timeLeft - timeBetweenMessages > 0) {
+				timeLeft -= timeBetweenMessages;
 			}
 		}
 	}
