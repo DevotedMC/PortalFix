@@ -1,4 +1,5 @@
 name: ${project.name}
 main: com.github.soerxpso.portalfix.PortalFix
 author: Soerxpso
+authors: [ProgrammerDan]
 version: ${project.version}

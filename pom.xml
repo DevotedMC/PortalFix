@@ -1,58 +1,58 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.github.soerxpso</groupId>
-  <artifactId>PortalFix</artifactId>
-  <version>1.0.1</version>
-  <packaging>jar</packaging>
+	<groupId>com.github.soerxpso</groupId>
+	<artifactId>PortalFix</artifactId>
+	<version>1.0.2</version>
+	<packaging>jar</packaging>
 
-  <name>PortalFix</name>
-  <url>http://github.com/DevotedMC/PortalFix</url>
+	<name>PortalFix</name>
+	<url>http://github.com/DevotedMC/PortalFix</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.spigotmc</groupId>
-           <artifactId>spigot-api</artifactId>
-           <version>1.8.8-R0.1-SNAPSHOT</version>
-           <type>jar</type>
-           <scope>provided</scope>
-    </dependency>
-  </dependencies>
-  
-  <build>
-    <pluginManagement>
-      <plugins>
-         <plugin>
-           <groupId>org.apache.maven.plugins</groupId>
-           <artifactId>maven-compiler-plugin</artifactId>
-           <configuration>
-             <source>1.7</source>
-             <target>1.7</target>
-           </configuration>
-         </plugin>
-      </plugins>
-	</pluginManagement>
-    <sourceDirectory>${basedir}/src/main</sourceDirectory>
-    <resources>
-      <resource>
-        <directory>${basedir}/src/main/resources</directory>
-        <includes>
-          <include>*.yml</include>
-        </includes>
-        <filtering>true</filtering>
-      </resource>
-	</resources>
-  </build>
-   
-  <repositories>
-    <repository>
-      <id>spigot-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-    </repository>
-  </repositories>
+	<dependencies>
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>1.8.8-R0.1-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.7</source>
+						<target>1.7</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<sourceDirectory>${basedir}/src/main</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<includes>
+					<include>*.yml</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
 </project>
