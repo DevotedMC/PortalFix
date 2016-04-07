@@ -5,3 +5,4 @@ countdown_interval: 6
 teleport_message: "&c&lWait %0 seconds to be teleported if you're stuck.&r"
 countdown_message: "&e&lWait %0 more seconds to be teleported.&r"
 post_teleport_message: "&6&lYou've been teleported back to natural spawn after being stuck in a portal. Travel Carefully!&r"
+teleport_debug: false

@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -40,6 +41,19 @@ public class PortalFix extends JavaPlugin implements Listener {
 
 	public static PortalFix getPlugin() {
 		return plugin;
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
+	public void onPlayerTeleport(PlayerTeleportEvent teleport) {
+		if (!Config.getTeleportDebug()) {
+			return;
+		}
+		Location from = teleport.getFrom();
+		Location to = teleport.getTo();
+		Player p = teleport.getPlayer();
+		PlayerTeleportEvent.TeleportCause cause = teleport.getCause();
+		log("{0} teleported from {1} to {2} with cause {3} (cancelled? {4})", p.getDisplayName(),
+			from, to, cause, teleport.isCancelled());
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

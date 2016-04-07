@@ -11,6 +11,14 @@ public class Config {
 		config = PortalFix.getPlugin().getConfig();
 	}
 
+	public static boolean getTeleportDebug() {
+		try {
+			return config.getBoolean("teleport_debug", false);
+		} catch (NullPointerException npe) {
+			return false;
+		}
+	}
+
 	public static String getSpawnName() {
 		try {
 			return config.getString("spawn_world", "world");
